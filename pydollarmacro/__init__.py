@@ -23,7 +23,8 @@ def call_until_invariant(f, args):
 	x = args[0]
 	if f(*args)==x:
 		return x
-	return f(*args)
+	args[0] = f(*args)
+	return call_until_invariant(f,args)
 
 def macro_name(s):
 	gfom = get_first_outer_macro(s)
@@ -49,11 +50,22 @@ def subst_str_once(s, macros):
 def subst_str(s, macros):
 	return call_until_invariant(subst_str_once, [s, macros])
 
-def subst_str_defaults_once(s):
+def get_first_outer_macro_default(s):
 	m = get_first_outer_macro(s)
 	if m is None:
+		return None
+	ms = m.split("=")
+	if len(ms)<2:
+		return get_first_outer_macro_default(s[1:])
+	return m
+
+
+def subst_str_defaults_once(s):
+	m = get_first_outer_macro_default(s)
+	if m is None:
 		return s
-	v = m.split("=")[1][:-1]
+	ms = m.split("=")
+	v = ms[1][:-1]
 	return s.replace(m, v)
 
 def subst_str_defaults(s):
