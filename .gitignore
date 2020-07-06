@@ -1,0 +1,3 @@
+*.pyc
+pydollarmacro/__pycache__/
+run_test.py

@@ -9,7 +9,8 @@ def find_right_paren(s, start=0):
 def get_first_outer_macro(s):
 	left = s.find("$(")
 	left2 = s.find("$(", left+1)
-	right = find_right_paren(s, 0)
+	#right = find_right_paren(s, 0)
+	right = find_right_paren(s, left)
 	while right is not None and left2<right and left2!=-1:
 		gfom = get_first_outer_macro(s[left2:])
 		n = left2+len(gfom)
@@ -56,7 +57,7 @@ def get_first_outer_macro_default(s):
 		return None
 	ms = m.split("=")
 	if len(ms)<2:
-		return get_first_outer_macro_default(s[1:])
+		return get_first_outer_macro_default(s[s.find(m)+1:])
 	return m
 
 
